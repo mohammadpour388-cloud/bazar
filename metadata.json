@@ -1,0 +1,6 @@
+{
+  "name": "بازار محلی ایران | پلتفرم تبادل مستقیم و امن کالا و خدمات",
+  "description": "سامانه هوشمند و امن خرید و فروش بی‌واسطه کالا، خودرو، املاک، کالای دیجیتال و خدمات محلی در سراسر کشور",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

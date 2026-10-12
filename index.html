@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <script>
+      // Robust fix for chrome extensions or environments setting window.fetch
+      (function() {
+        try {
+          var _fetch = window.fetch;
+          function defineSafeFetch(target) {
+            try {
+              Object.defineProperty(target, 'fetch', {
+                get: function() { return _fetch; },
+                set: function(fn) { _fetch = fn; },
+                configurable: true,
+                enumerable: true
+              });
+            } catch (e) {}
+          }
+          if (typeof Window !== 'undefined' && Window.prototype) {
+            defineSafeFetch(Window.prototype);
+          }
+          defineSafeFetch(window);
+
+          // Guard against getter-only redefinitions of fetch
+          var origDefineProperty = Object.defineProperty;
+          Object.defineProperty = function(obj, prop, descriptor) {
+            if ((obj === window || (typeof Window !== 'undefined' && obj === Window.prototype)) && prop === 'fetch') {
+              if (descriptor && descriptor.get && !descriptor.set) {
+                var getter = descriptor.get;
+                var setVal = null;
+                descriptor.set = function(fn) { setVal = fn; };
+                var originalGet = descriptor.get;
+                descriptor.get = function() {
+                  return setVal !== null ? setVal : originalGet.call(this);
+                };
+              }
+            }
+            return origDefineProperty.call(Object, obj, prop, descriptor);
+          };
+
+          // Suppress errors originating from browser extensions
+          window.addEventListener('error', function(e) {
+            if (e.filename && e.filename.indexOf('chrome-extension://') !== -1) {
+              e.preventDefault();
+            }
+          });
+        } catch (e) {}
+      })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>آوان مارکت | سامانه هوشمند و امن تبادل مستقیم کالا و خدمات</title>
+    <meta name="description" content="آوان مارکت - سامانه مدرن، پرانرژی و امن خرید و فروش مستقیم کالا، خودرو، املاک، کالای دیجیتال و خدمات در سراسر کشور" />
+    <meta property="og:title" content="آوان مارکت | سامانه هوشمند و امن تبادل مستقیم کالا و خدمات" />
+    <meta property="og:description" content="آوان مارکت - سامانه مدرن، پرانرژی و امن خرید و فروش مستقیم کالا، خودرو، املاک، کالای دیجیتال و خدمات در سراسر کشور" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="theme-color" content="#e11d48" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet" />
+  </head>
+  <body class="bg-[#faf8ff] text-[#131b2e] antialiased selection:bg-[#005c55] selection:text-white">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+
